@@ -35,6 +35,34 @@ const AnexoVProvider = ({children}) =>{
           }
     }
 
+    const obtenerAnexos =async(clienteID,trimestre)=>{
+        try {
+            const respuesta = await servidorAxios({
+              method: "POST",
+              url: `/cliente/trimestre`,
+              withCredentials: true,
+              data:{
+                clienteID,
+                trimestre
+              }
+            });
+            if(respuesta.status == 200){
+                console.log(respuesta)
+
+            return {
+                error:false,
+                data:respuesta.data.data
+                }
+            }
+          } catch (err) {
+            console.log(err)
+              return{
+                msg: "Hay un error con el internet",
+                error: true,
+              };
+          }
+    }
+
    
     
     return(
@@ -42,7 +70,8 @@ const AnexoVProvider = ({children}) =>{
             value={{
                 generarAnexoV,
                 cargando,
-                setCargando
+                setCargando,
+                obtenerAnexos
             }}
         >
             {children}

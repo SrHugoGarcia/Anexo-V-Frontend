@@ -1,22 +1,77 @@
-import { Listbox, Transition, Dialog } from "@headlessui/react";
-import { useState, useEffect, Fragment,useRef } from "react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+
+import { Fragment, useState,useEffect } from 'react'
+import { Listbox, Transition } from '@headlessui/react'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import useSeccionII from "../../hooks/useSeccionII"
 import Loader from "../Loader"
 import useCliente from "../../hooks/useCliente";
+import useAnexoV from "../../hooks/useAnexoV"
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
+const trimestres =[
+  "1","2","3","4"
+]
+
 const ConsultasComponent = () => {
   const [open, setOpen] = useState(false);
-
   const {setEditar, editar} =   useSeccionII()
-  const {setEditarClient, editarClient} = useCliente();
+  const {setEditarClient, editarClient,obtenerClientes} = useCliente();
+  const [ clientes,setClientes ] = useState();
+  const [cliente, setCliente] = useState()
+  const [trimestre, setTrimestre] = useState()
+  const [anexos, setAnexos] = useState()
+  const { obtenerAnexos } = useAnexoV();
+  const [activeTrimestre, setActiveTrimestre] = useState(false)
+  const [activeCliente, setActiveCliente] = useState(true)
+
   useEffect(()=>{
     if(editar || editarClient){
       setEditar(false)
       setEditarClient(false)
     }
   },[])
-  if(editar || editarClient)return <Loader/>
 
+  useEffect(()=>{
+    const getClientes=async()=>{
+      const { error,data } = await obtenerClientes()
+      if(error){
+       
+      }else{
+        setClientes(data.data)
+      }
+    }
+   getClientes()
+  },[])
+
+  useEffect(()=>{
+    const getAnexos =async()=>{
+      const { error,data } = await obtenerAnexos(cliente.clienteID,trimestre)
+      if(error){
+
+      }else{
+        setAnexos(data);
+      }
+    }
+   getAnexos()
+  },[trimestre])
+
+    const activarTrimestre =(e)=>{
+      e.preventDefault();
+      if(cliente){
+        setActiveTrimestre(true)
+        setActiveCliente(false)
+      }
+    }
+
+    const activarCliente =(e)=>{
+        e.preventDefault()
+        setActiveTrimestre(false)
+        setActiveCliente(true)
+    }
+  console.log(anexos)
+  if(editar || editarClient)return <Loader/>
   return (
     <>
       <div className="mt-10 bg-white pb-12 sm:pb-0">
@@ -25,9 +80,9 @@ const ConsultasComponent = () => {
             <div className="mx-auto max-w-4xl">
               <dl className="rounded-lg bg-white shadow-lg sm:grid sm:grid-cols-3">
                 <div
+                                                                  onClick={e=>activarCliente(e)}
                   className=
                     "whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
-                  
                 >
                   <dd className="order-1 text-3xl font-bold tracking-tight text-black">
                     Selecciona
@@ -36,7 +91,10 @@ const ConsultasComponent = () => {
                     el cliente
                   </dt>
                 </div>
-                <div>
+                <div
+                                  onClick={e=>activarTrimestre(e)}
+                >
+                  
                   <dd className="order-1 text-3xl font-bold tracking-tight text-black">
                     Selecciona
                   </dd>
@@ -44,7 +102,8 @@ const ConsultasComponent = () => {
                     el trimestre
                   </dt>
                 </div>
-                <div>
+                <div
+                >
                   <dd className="order-1 text-3xl font-bold tracking-tight text-black">
                     Ver
                   </dd>
@@ -54,24 +113,16 @@ const ConsultasComponent = () => {
                 </div>
               </dl>
             </div>
-
-            <div className="mx-auto max-w-4xl">
-              <Listbox>
-                <Listbox.Label className="  text-sm font-medium text-[#535766]">
-                  Escoge el cliente:
-                </Listbox.Label>
+            {activeCliente ? 
+            <Listbox value={cliente} onChange={setCliente}>
+            {({ open }) => (
+              <>
+                <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">Assigned to</Listbox.Label>
                 <div className="relative mt-2">
-                  <Listbox.Button className="relative w-full border bg-white py-3  px-6 text-leftborder border-gray-300  shadow-sm focus:border-amber-500 focus:text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-amber-500 sm:text-sm focus:shadow-amber-400 focus:shadow-md hover:duration-700">
-                    <span className="flex items-center">
-                      <span className="ml-3 block truncate">
-                      Selecciona una opción
-                      </span>
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
+                  <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <span className="block truncate">{cliente? cliente.cliente: "Selecciona una opcion"}</span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
                   </Listbox.Button>
 
@@ -82,45 +133,104 @@ const ConsultasComponent = () => {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"></Listbox.Options>
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {clientes && clientes.map((cliente) => (
+                        <Listbox.Option
+                          key={cliente.clienteID}
+                          className={({ active }) =>
+                            classNames(
+                              active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                              'relative cursor-default select-none py-2 pl-8 pr-4'
+                            )
+                          }
+                          value={cliente}
+                        >
+                          {({ selected, active }) => (
+                            <>
+                              <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
+                                {cliente.cliente}
+                              </span>
+
+                              {selected ? (
+                                <span
+                                  className={classNames(
+                                    active ? 'text-white' : 'text-indigo-600',
+                                    'absolute inset-y-0 left-0 flex items-center pl-1.5'
+                                  )}
+                                >
+                                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
                   </Transition>
                 </div>
-              </Listbox>
-            </div>
-
-            <div className="mx-auto max-w-4xl">
-              <Listbox>
-                <Listbox.Label className="  text-sm font-medium text-[#535766]">
-                  Escoge el trimestre:
-                </Listbox.Label>
-                <div className="relative mt-2">
-                  <Listbox.Button className="relative w-full border bg-white py-3  px-6 text-leftborder border-gray-300  shadow-sm focus:border-amber-500 focus:text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-amber-500 sm:text-sm focus:shadow-amber-400 focus:shadow-md hover:duration-700">
-                    <span className="flex items-center">
-                      <span className="ml-3 block truncate">
-                      Selecciona una opción
-                      </span>
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-
-                  <Transition
-                    show={open}
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"></Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
-            </div>
+              </>
+            )}
+          </Listbox>:   <></>}
             
+            {activeTrimestre ? <Listbox value={trimestre} onChange={setTrimestre}>
+              {({ open }) => (
+                <>
+                  <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">Assigned to</Listbox.Label>
+                  <div className="relative mt-2">
+                    <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                      <span className="block truncate">{trimestre? "Trimestre " + trimestre: "Selecciona una opcion"}</span>
+                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </span>
+                    </Listbox.Button>
+
+                    <Transition
+                      show={open}
+                      as={Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {trimestres && trimestres.map((trimestre) => (
+                          <Listbox.Option
+                            key={trimestre}
+                            className={({ active }) =>
+                              classNames(
+                                active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                                'relative cursor-default select-none py-2 pl-8 pr-4'
+                              )
+                            }
+                            value={trimestre}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span className={classNames(selected ? 'font-semibold' : 'font-normal', 'block truncate')}>
+                                 Trimestre  {trimestre}
+                                </span>
+
+                                {selected ? (
+                                  <span
+                                    className={classNames(
+                                      active ? 'text-white' : 'text-indigo-600',
+                                      'absolute inset-y-0 left-0 flex items-center pl-1.5'
+                                    )}
+                                  >
+                                    <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </>
+              )}
+            </Listbox>: <> </> }
+            
+         
           </div>
         </div>
       </div>
