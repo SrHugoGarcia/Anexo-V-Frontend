@@ -444,9 +444,10 @@ const ConsultasComponent = () => {
                                content="Crear anexo"
                              >
                                <a
-                                 onClick={(e) =>
+                                onClick={(e) =>
                                    crearAnexoV(e, anexo.anexoID)
                                  }
+                                 href={anexo.anexoURL?anexo.anexoURL:""}
                                  className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
                                >
                                  <DocumentPlusIcon className="w-8" />
@@ -460,6 +461,7 @@ const ConsultasComponent = () => {
                                  onClick={(e) =>
                                    crearInforme(e, anexo.anexoID)
                                  }
+                                 href={anexo.informeURL?anexo.informeURL:""}
                                  className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-yellow-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
                                >
                                  <ClipboardDocumentListIcon className="w-8" />
