@@ -140,6 +140,8 @@ export default function ComponentesTable() {
       const msg = { error: false, msg: "Generado Correctamente" };
       setMensaje(msg);
     }
+    setAlerta(true);
+
   };
 
   const editarComponente = async (e, componente) => {

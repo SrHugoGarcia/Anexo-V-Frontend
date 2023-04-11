@@ -146,6 +146,8 @@ const ConsultasComponent = () => {
       const msg = { error: false, msg: "Generado Correctamente" };
       setMensaje(msg);
     }
+    setAlerta(true);
+
   };
 
   console.log(anexos);
