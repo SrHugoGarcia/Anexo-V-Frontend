@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useSeccionII from "../../hooks/useSeccionII";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function EditComponente({ componente }) {
   const [nombreInstalacion, setNombreInstalacion] = useState(
@@ -69,77 +69,77 @@ export default function EditComponente({ componente }) {
   const [volumenMetano, setvolumenMetano] = useState(componente.volumenMetano);
   const [fuga, setFuga] = useState(componente.fuga);
   const [observacion, setObservacion] = useState(componente.observacion);
-  const [observacionPersonal, setObservacionPersonal] = useState(componente.observacionPersonal);
-  const {updateSeccionII} = useSeccionII()
+  const [observacionPersonal, setObservacionPersonal] = useState(
+    componente.observacionPersonal
+  );
+  const { updateSeccionII } = useSeccionII();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Función para convertir la fecha en formato "DD/MM/AAAA" a "AAAA-MM-DD"
     const convertirFechaAFormatoAAAAMMDD = (fecha) => {
       const partes = fecha.split("-");
-      if(!partes[1]){
+      if (!partes[1]) {
         const partes2 = fecha.split("/");
-        console.log(partes2)
+        console.log(partes2);
         const dia = partes2[0];
-      const mes = partes2[1];
-      const anio = partes2[2];
-      return `${anio}-${mes}-${dia}`;
-      }else{
-        console.log(partes)
+        const mes = partes2[1];
+        const anio = partes2[2];
+        return `${anio}-${mes}-${dia}`;
+      } else {
+        console.log(partes);
         const dia = partes[2];
         const mes = partes[1];
         const anio = partes[0];
         return `${anio}-${mes}-${dia}`;
       }
-    
     };
 
     // Establecer la fecha predeterminada en formato "AAAA-MM-DD"
-    if(componente.fechaInicioInspeccion){
+    if (componente.fechaInicioInspeccion) {
       setFechaInicioInspeccion(
         convertirFechaAFormatoAAAAMMDD(componente.fechaInicioInspeccion)
       );
     }
-  
-    if(componente.fechafinalizacionInspeccion){
+
+    if (componente.fechafinalizacionInspeccion) {
       setFechaConclusionInspeccion(
         convertirFechaAFormatoAAAAMMDD(componente.fechafinalizacionInspeccion)
       );
     }
-    if(componente.fechaCalibracion){
+    if (componente.fechaCalibracion) {
       setFechaCalibracion(
         convertirFechaAFormatoAAAAMMDD(componente.fechaCalibracion)
       );
     }
-    if(componente.fechaReparacion){
+    if (componente.fechaReparacion) {
       setFechaReparacion(
         convertirFechaAFormatoAAAAMMDD(componente.fechaReparacion)
       );
     }
-   
-    if(componente.fechaComprobacionReparacion){
+
+    if (componente.fechaComprobacionReparacion) {
       setFechaComprobacionReparacion(
         convertirFechaAFormatoAAAAMMDD(componente.fechaComprobacionReparacion)
       );
     }
-    
-    if(componente.fechaRemisionComponente){
+
+    if (componente.fechaRemisionComponente) {
       setFechaRemisionComponente(
         convertirFechaAFormatoAAAAMMDD(componente.fechaRemisionComponente)
       );
     }
-    if(componente.fechaReparacionComponente){
+    if (componente.fechaReparacionComponente) {
       setFechaReperacionComponente(
         convertirFechaAFormatoAAAAMMDD(componente.fechaReperacionComponente)
       );
     }
-  
-  if(componente.fechaRemplazoEquipo){
-    setFechaRemplazoEquipo(
-      convertirFechaAFormatoAAAAMMDD(componente.fechaRemplazoEquipo)
-    );
-  }
-    
+
+    if (componente.fechaRemplazoEquipo) {
+      setFechaRemplazoEquipo(
+        convertirFechaAFormatoAAAAMMDD(componente.fechaRemplazoEquipo)
+      );
+    }
   }, []);
 
   console.log(componente);
@@ -150,55 +150,62 @@ export default function EditComponente({ componente }) {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("ola")
+    console.log("ola");
     const datos = {
-        nombreInstalacion,
-        idComponente,
-        ubicacionInstalacion,
-        equipoCritico,
-        inspeccionTecnicaRiesgo,
-        nombrePersonal,
-        fechaInicioInspeccion:fechaInicioInspeccion? fechaInicioInspeccion: "",
-        horaInicioInspeccion,
-        fechafinalizacionInspeccion:fechaConclusionInspeccion?fechaConclusionInspeccion:"",
-        horafinalizacionInspeccion,
-        temperatura,
-        velocidadViento,
-        instrumentoUtilizado,
-        fechaCalibracion: fechaCalibracion ? fechaCalibracion: "",
-        desviacionProcedimiento,
-        justificacionDesviacion,
-        interferenciaDeteccion,
-        concentracionPrevia,
-        reparado,
-        trimestre: componente.trimestre,
-        fechaReparacion: fechaReparacion? fechaReparacion:"",
-        horaReparacion,
-        fechaComprobacionReparacion: fechaComprobacionReparacion? fechaComprobacionReparacion: "",
-        horaComprobacionReparacion,
-        concentracionPosteriorReparacion,
-        noReparadofaltaComponentes,
-        fechaRemisionComponente: fechaRemisionComponente? fechaRemisionComponente:"",
-        fechaReperacionComponente: fechaReperacionComponente? fechaReperacionComponente:"",
-        fechaRemplazoEquipo: fechaRemplazoEquipo ? fechaRemplazoEquipo : "",
-        volumenMetano,
-        fuga,
-        observacion,
-        observacionPersonal,
-        anexoID:componente.anexoID
+      nombreInstalacion,
+      idComponente,
+      ubicacionInstalacion,
+      equipoCritico,
+      inspeccionTecnicaRiesgo,
+      nombrePersonal,
+      fechaInicioInspeccion: fechaInicioInspeccion ? fechaInicioInspeccion : "",
+      horaInicioInspeccion,
+      fechafinalizacionInspeccion: fechaConclusionInspeccion
+        ? fechaConclusionInspeccion
+        : "",
+      horafinalizacionInspeccion,
+      temperatura,
+      velocidadViento,
+      instrumentoUtilizado,
+      fechaCalibracion: fechaCalibracion ? fechaCalibracion : "",
+      desviacionProcedimiento,
+      justificacionDesviacion,
+      interferenciaDeteccion,
+      concentracionPrevia,
+      reparado,
+      trimestre: componente.trimestre,
+      fechaReparacion: fechaReparacion ? fechaReparacion : "",
+      horaReparacion,
+      fechaComprobacionReparacion: fechaComprobacionReparacion
+        ? fechaComprobacionReparacion
+        : "",
+      horaComprobacionReparacion,
+      concentracionPosteriorReparacion,
+      noReparadofaltaComponentes,
+      fechaRemisionComponente: fechaRemisionComponente
+        ? fechaRemisionComponente
+        : "",
+      fechaReperacionComponente: fechaReperacionComponente
+        ? fechaReperacionComponente
+        : "",
+      fechaRemplazoEquipo: fechaRemplazoEquipo ? fechaRemplazoEquipo : "",
+      volumenMetano,
+      fuga,
+      observacion,
+      observacionPersonal,
+      anexoID: componente.anexoID,
+    };
+    const { data, error } = await updateSeccionII(datos);
+
+    if (error) {
+      // Manejar el error
+    } else {
+      console.log("Hola");
+      // Redireccionar a la página principal
+      navigate("/"); // Reemplaza '/' con la ruta de tu página principal
     }
-    const {data,error} =await updateSeccionII(datos);
-
-
-  if (error) {
-    // Manejar el error
-  } else {
-    console.log("Hola");
-    // Redireccionar a la página principal
-    navigate('/'); // Reemplaza '/' con la ruta de tu página principal
-  }
   };
-  //fuga, observacion, observacionPersonal trimestre 
+  //fuga, observacion, observacionPersonal trimestre
   console.log(componente.fechaInicioInspeccion);
   return (
     <div className="space-y-10 divide-y divide-gray-900/10">
@@ -241,7 +248,7 @@ export default function EditComponente({ componente }) {
                       value={nombreInstalacion}
                       onChange={(e) => setNombreInstalacion(e.target.value)}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -263,7 +270,7 @@ export default function EditComponente({ componente }) {
                         setIdComponente(e.target.value);
                       }}
                       autoComplete="family-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -283,7 +290,7 @@ export default function EditComponente({ componente }) {
                       value={ubicacionInstalacion}
                       onChange={(e) => setUbicacionInstalacion(e.target.value)}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -302,7 +309,7 @@ export default function EditComponente({ componente }) {
                       defaultValue={equipoCritico}
                       onChange={(e) => setEquipoCritico(e.target.value)}
                       autoComplete="country-name"
-                      className="block w-full rounded-md border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>Si</option>
                       <option>No</option>
@@ -326,7 +333,7 @@ export default function EditComponente({ componente }) {
                         setInspeccionTecnicaRiesgo(e.target.value)
                       }
                       autoComplete="country-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>Si</option>
                       <option>No</option>
@@ -367,7 +374,7 @@ export default function EditComponente({ componente }) {
                       value={nombrePersonal}
                       onChange={(e) => setNombrePersonal(e.target.value)}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -387,7 +394,7 @@ export default function EditComponente({ componente }) {
                       value={fechaInicioInspeccion} // Utilizar el valor del estado para establecer la fecha predeterminada
                       onChange={(e) => setFechaInicioInspeccion(e.target.value)}
                       autoComplete="family-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -407,7 +414,7 @@ export default function EditComponente({ componente }) {
                       value={horaInicioInspeccion}
                       onChange={(e) => setHoraInicioInspeccion(e.target.value)}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -429,7 +436,7 @@ export default function EditComponente({ componente }) {
                       name="fechaConclusionInspeccion"
                       id="fechaConclusionInspeccion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -451,7 +458,7 @@ export default function EditComponente({ componente }) {
                       name="horafinalizacionInspeccion"
                       id="horafinalizacionInspeccion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -471,7 +478,7 @@ export default function EditComponente({ componente }) {
                       name="temperatura"
                       id="temperatura"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -491,7 +498,7 @@ export default function EditComponente({ componente }) {
                       name="VelocidadViento"
                       id="VelocidadViento"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -511,7 +518,7 @@ export default function EditComponente({ componente }) {
                       value={instrumentoUtilizado}
                       onChange={(e) => setInstrumentoUtilizado(e.target.value)}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -531,7 +538,7 @@ export default function EditComponente({ componente }) {
                       value={fechaCalibracion}
                       onChange={(e) => setFechaCalibracion(e.target.value)}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -553,7 +560,7 @@ export default function EditComponente({ componente }) {
                       name="desviacionProcedimiento"
                       id="desviacionProcedimiento"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -575,7 +582,7 @@ export default function EditComponente({ componente }) {
                       name="justificacionDesviacion"
                       id="justificacionDesviacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -597,7 +604,7 @@ export default function EditComponente({ componente }) {
                       name="interferenciaDeteccion"
                       id="interferenciaDeteccion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -617,7 +624,7 @@ export default function EditComponente({ componente }) {
                       name="concentracionPrevia"
                       id="concentracionPrevia"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -636,7 +643,7 @@ export default function EditComponente({ componente }) {
                       onChange={(e) => setReparado(e.target.value)}
                       name="reparado"
                       autoComplete="reparado-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>Si</option>
                       <option>No</option>
@@ -659,7 +666,7 @@ export default function EditComponente({ componente }) {
                       name="fechaReparacion"
                       id="fechaReparacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -679,7 +686,7 @@ export default function EditComponente({ componente }) {
                       name="horaReparacion"
                       id="horaReparacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -701,7 +708,7 @@ export default function EditComponente({ componente }) {
                       name="fechaComprobacionReparacion"
                       id="fechaComprobacionReparacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -723,7 +730,7 @@ export default function EditComponente({ componente }) {
                       name="fechaConclusionInspeccion"
                       id="fechaConclusionInspeccion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -745,7 +752,7 @@ export default function EditComponente({ componente }) {
                       name="horaComprobacionReparacion"
                       id="horaComprobacionReparacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -767,7 +774,7 @@ export default function EditComponente({ componente }) {
                       name="concentracionPosteriorReparacion"
                       id="concentracionPosteriorReparacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -792,7 +799,7 @@ export default function EditComponente({ componente }) {
                       id="noReparadofaltaComponentes"
                       name="noReparadofaltaComponentes"
                       autoComplete="noReparadofaltaComponentes-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>Si</option>
                       <option>No</option>
@@ -818,7 +825,7 @@ export default function EditComponente({ componente }) {
                       name="fechaRemisionComponente"
                       id="fechaRemisionComponente"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -840,7 +847,7 @@ export default function EditComponente({ componente }) {
                       name="fechaReperacionComponente"
                       id="fechaReperacionComponente"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -860,11 +867,11 @@ export default function EditComponente({ componente }) {
                       name="fechaRemplazoEquipo"
                       id="fechaRemplazoEquipo"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
-                
+
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="volumenMetano"
@@ -882,7 +889,7 @@ export default function EditComponente({ componente }) {
                         setvolumenMetano(e.target.value);
                       }}
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -902,7 +909,7 @@ export default function EditComponente({ componente }) {
                       name="observacion"
                       id="observacion"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -922,11 +929,11 @@ export default function EditComponente({ componente }) {
                       name="observacionPersonal"
                       id="observacionPersonal"
                       autoComplete="given-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
-                    
+
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="fuga"
@@ -937,35 +944,31 @@ export default function EditComponente({ componente }) {
                   <div className="mt-2">
                     <select
                       defaultValue={fuga}
-                      onChange={(e) =>
-                        setFuga(e.target.value)
-                      }
+                      onChange={(e) => setFuga(e.target.value)}
                       id="fuga"
                       name="fuga"
                       autoComplete="fuga-name"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     >
                       <option>Si</option>
                       <option>No</option>
                     </select>
                   </div>
                 </div>
-
-               
               </div>
             </div>
             <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
               <a
                 onClick={(e) => regresar(e)}
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold px-3 py-2 border rounded-md cursor-pointer leading-6 text-gray-900"
               >
-                Cancel
+                Cancelar
               </a>
               <button
                 type="submit"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-[#009640] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Save
+                Guardar
               </button>
             </div>
           </div>

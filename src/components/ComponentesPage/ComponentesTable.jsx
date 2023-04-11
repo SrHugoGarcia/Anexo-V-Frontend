@@ -7,6 +7,15 @@ import Alerta from "../Alerta";
 import EditComponente from "./EditComponente";
 import Loader from "../Loader";
 import useCliente from "../../hooks/useCliente";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ClipboardDocumentListIcon,
+  DocumentPlusIcon,
+  MagnifyingGlassIcon,
+  PencilSquareIcon,
+} from "@heroicons/react/20/solid";
+import { Tooltip } from "@material-tailwind/react";
 export default function ComponentesTable() {
   const { obtenerSeccionesII, editar, setEditar } = useSeccionII();
   const { generarAnexoV, cargando, setCargando } = useAnexoV();
@@ -19,77 +28,82 @@ export default function ComponentesTable() {
   const [buscarIdComponente, setBuscarIdComponente] = useState("");
   const [componente, setComponente] = useState();
   const [longitudPalabraComponente, setLongitudPalabraComponente] = useState();
-  const [longitudPalabraInstalacion, setLongitudPalabraInstalacion] = useState();
-  const [buscarInstalacion,setBuscarInstalacion] = useState("");
-  const {editarClient,setEditarClient} = useCliente()
-  console.log(editar)
+  const [longitudPalabraInstalacion, setLongitudPalabraInstalacion] =
+    useState();
+  const [buscarInstalacion, setBuscarInstalacion] = useState("");
+  const { editarClient, setEditarClient } = useCliente();
+  console.log(editar);
   useEffect(() => {
     const seccionII = async () => {
       const { error, data } = await obtenerSeccionesII();
       if (error) {
-
         //alerta
         const msg = { error: true, msg: "Hubo un error, no tienes internet" };
-        console.log(msg)
+        console.log(msg);
         setMensaje(msg);
         setAlerta(true);
       } else {
         setSeccionesII(data.data);
-        setSeccionesII2(data.data)
+        setSeccionesII2(data.data);
       }
     };
     seccionII();
-    
   }, []);
-  useEffect(()=>{
-    if(editar || editarClient){
-      setEditar(false)
-      setEditarClient(false)
+  useEffect(() => {
+    if (editar || editarClient) {
+      setEditar(false);
+      setEditarClient(false);
     }
-  },[])
+  }, []);
 
   useEffect(() => {
-    setBuscarInstalacion('')
+    setBuscarInstalacion("");
     setLongitudPalabraComponente(buscarIdComponente.length);
-    if(buscarIdComponente.length==0){
-      console.log("000000")
+    if (buscarIdComponente.length == 0) {
+      console.log("000000");
       return setSeccionesII(seccionesII2);
     }
-    if (longitudPalabraComponente> buscarIdComponente.length) {
+    if (longitudPalabraComponente > buscarIdComponente.length) {
       const filter = seccionesII2.filter((el) => {
-        return el.idComponente.toLowerCase().includes(buscarIdComponente.toLowerCase());
+        return el.idComponente
+          .toLowerCase()
+          .includes(buscarIdComponente.toLowerCase());
       });
       return setSeccionesII(filter);
     }
-    
-    console.log("PASA")
-      const filter = seccionesII2.filter((el) => {
-        return el.idComponente.toLowerCase().includes(buscarIdComponente.toLowerCase());
-      });
-      return setSeccionesII(filter);
-   
+
+    console.log("PASA");
+    const filter = seccionesII2.filter((el) => {
+      return el.idComponente
+        .toLowerCase()
+        .includes(buscarIdComponente.toLowerCase());
+    });
+    return setSeccionesII(filter);
   }, [buscarIdComponente]);
-  
+
   useEffect(() => {
-    setBuscarIdComponente('')
+    setBuscarIdComponente("");
     setLongitudPalabraInstalacion(buscarInstalacion.length);
-    if(buscarInstalacion.length==0){
-      console.log("000000")
+    if (buscarInstalacion.length == 0) {
+      console.log("000000");
       return setSeccionesII(seccionesII2);
     }
     if (longitudPalabraInstalacion > buscarInstalacion.length) {
       const filter = seccionesII2.filter((el) => {
-        return el.nombreInstalacion.toLowerCase().includes(buscarInstalacion.toLowerCase());
+        return el.nombreInstalacion
+          .toLowerCase()
+          .includes(buscarInstalacion.toLowerCase());
       });
       return setSeccionesII(filter);
     }
-    
-    console.log("PASA")
-      const filter = seccionesII2.filter((el) => {
-        return el.nombreInstalacion.toLowerCase().includes(buscarInstalacion.toLowerCase());
-      });
-      return setSeccionesII(filter);
-   
+
+    console.log("PASA");
+    const filter = seccionesII2.filter((el) => {
+      return el.nombreInstalacion
+        .toLowerCase()
+        .includes(buscarInstalacion.toLowerCase());
+    });
+    return setSeccionesII(filter);
   }, [buscarInstalacion]);
   const crearAnexoV = async (e, idSeccionII) => {
     e.preventDefault();
@@ -127,36 +141,38 @@ export default function ComponentesTable() {
     setEditar(true);
     setComponente(componente);
   };
-  if(editarClient)return <Loader/>
-  console.log(menseje)
+  if (editarClient) return <Loader />;
+  console.log(menseje);
   return (
     <>
       {editar ? (
-                <div className="px-4 sm:px-6 lg:px-8">
-        <EditComponente componente={componente}></EditComponente> </div>
-      ) : (
         <div className="px-4 sm:px-6 lg:px-8">
+          <EditComponente componente={componente}></EditComponente>{" "}
+        </div>
+      ) : (
+        <div className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto ">
           <Modal mensaje={msg}></Modal>
           {alerta && <Alerta alerta={menseje}></Alerta>}
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
               <h1 className="text-base font-semibold leading-6 text-gray-900">
-                Lista de Registros que se han realizado en el celular
+                Componentes
               </h1>
               <p className="mt-2 text-sm text-gray-700">
                 Aqui puedes editar la informacion que registraste en el celular
               </p>
             </div>
           </div>
-          <div className="flex w-full justify-center py-3 pb-3">
-              <div className="w-full max-w-4xl">
+          <section className="flex justify-between gap-5">
+            <div className="flex w-full justify-center py-3 pb-3">
+              <div className="w-full ">
                 <div className="grid grid-cols-6 gap-6 mt-2">
                   <div className="col-span-6  sm:col-span-6 ">
                     <label
                       htmlFor="search"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Busca unicamente por nombre
+                      Busca unicamente por IdComponente:
                     </label>
                     <div className="relative mt-1 flex items-center">
                       <input
@@ -164,14 +180,12 @@ export default function ComponentesTable() {
                         name="search"
                         id="search"
                         value={buscarIdComponente}
-                        placeholder="Ingresa las iniciales de un nombre"
+                        placeholder="Ingresa las iniciales de un IdComponente:"
                         onChange={(e) => setBuscarIdComponente(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
+                        className="block w-full  py-2 rounded-md pl-9 shadow-sm border border-[#79b8dd] focus:outline-none focus:ring-2 focus:ring-[#ADD6ED] sm:text-sm"
                       />
-                      <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                        <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
-                          ⌘K
-                        </kbd>
+                      <div className="absolute inset-y-0 text-gray-500 left-0 flex py-1.5 pl-1.5">
+                        <MagnifyingGlassIcon />
                       </div>
                     </div>
                   </div>
@@ -179,14 +193,14 @@ export default function ComponentesTable() {
               </div>
             </div>
             <div className="flex w-full justify-center py-3 pb-3">
-              <div className="w-full max-w-4xl">
+              <div className="w-full ">
                 <div className="grid grid-cols-6 gap-6 mt-2">
                   <div className="col-span-6  sm:col-span-6 ">
                     <label
                       htmlFor="search"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Busca unicamente por Instalacion
+                      Busca unicamente por instalación
                     </label>
                     <div className="relative mt-1 flex items-center">
                       <input
@@ -194,24 +208,22 @@ export default function ComponentesTable() {
                         name="search"
                         id="search"
                         value={buscarInstalacion}
-                        placeholder="Ingresa las iniciales de la buscarInstalacion"
+                        placeholder="Ingresa las iniciales de la instalación"
                         onChange={(e) => setBuscarInstalacion(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 pr-12 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm"
+                        className="block w-full  py-2 rounded-md pl-9 shadow-sm border border-[#79b8dd] focus:outline-none focus:ring-2 focus:ring-[#ADD6ED] sm:text-sm"
                       />
-                      <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                        <kbd className="inline-flex items-center rounded border border-gray-200 px-2 font-sans text-sm font-medium text-gray-400">
-                          ⌘K
-                        </kbd>
+                      <div className="absolute inset-y-0 text-gray-500 left-0 flex py-1.5 pl-1.5">
+                        <MagnifyingGlassIcon />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </section>
 
-            
-          <div className="mt-8 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="mt-8 flow-root ">
+            <div className="-mx-4 -my-2  overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead>
@@ -232,13 +244,13 @@ export default function ComponentesTable() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Nombre Instalacion
+                        Nombre Instalación
                       </th>
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Ubicacion Instalacion
+                        Ubicacion Instalación
                       </th>
                       <th
                         scope="col"
@@ -264,36 +276,81 @@ export default function ComponentesTable() {
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {componente.ubicacionInstalacion}
                           </td>
-                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 flex justify-between text-center">
+                          <td className="  flex justify-between items-center ">
                             <>
-                              <a
-                                onClick={(e) => editarComponente(e, componente)}
-                                className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-blue-600 w-1/5 px-1 rounded-md py-1"
+                              <Tooltip
+                                className="bg-slate-900"
+                                content="Editar componente"
                               >
-                                Editar
-                              </a>
-                              <a
-                                onClick={(e) =>
-                                  crearAnexoV(e, componente.anexoID)
-                                }
-                                className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600 w-40 rounded-md py-1"
+                                <a
+                                  onClick={(e) =>
+                                    editarComponente(e, componente)
+                                  }
+                                  className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-blue-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
+                                >
+                                  <PencilSquareIcon className="w-8" />
+                                </a>
+                              </Tooltip>
+                              <Tooltip
+                                className="bg-slate-900"
+                                content="Crear anexo"
                               >
-                                Generar Anexo V
-                              </a>
-                              <a
-                                onClick={(e) =>
-                                  crearInforme(e, componente.anexoID)
-                                }
-                                className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-yellow-600 w-1/3 rounded-md py-1"
+                                <a
+                                  onClick={(e) =>
+                                    crearAnexoV(e, componente.anexoID)
+                                  }
+                                  className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
+                                >
+                                  <DocumentPlusIcon className="w-8" />
+                                </a>
+                              </Tooltip>
+                              <Tooltip
+                                className="bg-slate-900"
+                                content="Crear informe"
                               >
-                                Generar Reporte
-                              </a>
+                                <a
+                                  onClick={(e) =>
+                                    crearInforme(e, componente.anexoID)
+                                  }
+                                  className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-yellow-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
+                                >
+                                  <ClipboardDocumentListIcon className="w-8" />
+                                </a>
+                              </Tooltip>
                             </>
                           </td>
                         </tr>
                       ))}
                   </tbody>
                 </table>
+                <nav
+                className="flex items-center justify-between border-t border-gray-200 bg-white py-3 "
+                aria-label="Pagination"
+              >
+                <div className="hidden sm:block">
+                  <p className="text-sm text-gray-700">
+                    Mostrando <span className="font-medium">1</span> a{" "}
+                    <span className="font-medium">10</span> de{" "}
+                    <span className="font-medium">20</span> resultados
+                  </p>
+                </div>
+                <div className="flex flex-1 justify-between sm:justify-end">
+                  <a
+                    href="#"
+                    className="flex justify-between gap-x-2 relative items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:text-white ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
+                  >
+                    <ArrowLeftIcon className="w-6"/>
+                    Anterior
+                  </a>
+                  <a
+                    href="#"
+                    className="relative ml-3 flex justify-between gap-x-2 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold hover:text-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
+                  >
+                    Siguiente
+                    <ArrowRightIcon className="w-6"/>
+                  </a>
+                </div>
+              </nav>
               </div>
             </div>
           </div>

@@ -20,7 +20,7 @@ const MainLayout = () => {
        <Navbar/>     
       <div className="flex ">
         <Side />
-        <div className="mx-auto w-full mt-20 pt-20 pl-14  md:pl-48">
+        <div className="mx-auto w-full mt-20 pt-14 pl-14  md:pl-48">
           <Outlet />
         </div>
       </div></>)}
