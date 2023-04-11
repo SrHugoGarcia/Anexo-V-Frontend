@@ -12,13 +12,23 @@ const ClienteProvider = ({children}) =>{
     const [cargando, setCargando] = useState(true);
     const [editarClient,setEditarClient] = useState(false)
 
-    const obtenerClientes =async()=>{
+    const obtenerClientes =async(paginate)=>{
         try {
-            const respuesta = await servidorAxios({
-              method: "GET",
-              url: `/cliente`,
-              withCredentials: true,
-            });
+          let respuesta
+            if(paginate){
+               respuesta = await servidorAxios({
+                method: "GET",
+                url: `/cliente?page=${paginate}`,
+                withCredentials: true,
+              });
+            }else{
+               respuesta = await servidorAxios({
+                method: "GET",
+                url: `/cliente`,
+                withCredentials: true,
+              });
+            }
+           
             console.log(respuesta)
             if(respuesta.data.status === 'successful'){
             return {

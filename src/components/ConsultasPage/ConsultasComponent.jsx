@@ -15,6 +15,9 @@ import {
   DocumentPlusIcon,
 } from "@heroicons/react/24/outline";
 import { Tooltip } from "@material-tailwind/react";
+import useInforme from "../../hooks/useInforme";
+import Alerta from "../Alerta";
+import Modal from "../Modal";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -29,10 +32,15 @@ const ConsultasComponent = () => {
   const [cliente, setCliente] = useState();
   const [trimestre, setTrimestre] = useState();
   const [anexos, setAnexos] = useState();
-  const { obtenerAnexos } = useAnexoV();
+  const { obtenerAnexos,generarAnexoV,setCargando } = useAnexoV();
   const [activeTrimestre, setActiveTrimestre] = useState(false);
   const [activeCliente, setActiveCliente] = useState(true);
   const [activeAnexos, setActiveAnexos] = useState(false);
+  const [paginate, setPaginate] = useState(1)
+  const { generarInforme } = useInforme();
+  const [alerta, setAlerta] = useState();
+  const [menseje, setMensaje] = useState({});
+  const [msg, setMsg] = useState({});
 
   useEffect(() => {
     if (editar || editarClient) {
@@ -46,22 +54,32 @@ const ConsultasComponent = () => {
       const { error, data } = await obtenerClientes();
       if (error) {
       } else {
-        setClientes(data.data);
+        setClientes(data.data.data);
       }
     };
     getClientes();
   }, []);
 
   useEffect(() => {
-    const getAnexos = async () => {
-      const { error, data } = await obtenerAnexos(cliente.clienteID, trimestre);
+    const getAnexos = async (paginate) => {
+      const { error, data } = await obtenerAnexos(cliente.clienteID, trimestre,paginate);
       if (error) {
       } else {
-        setAnexos(data);
+        console.log(data)
+        setAnexos(data.data);
       }
     };
-    getAnexos();
-  }, [trimestre]);
+    if(paginate==0){
+      setPaginate(1)
+    }else{
+      console.log(1212)
+      if(cliente){
+        console.log("POPO")
+        getAnexos(paginate);
+
+      }
+    }
+  }, [trimestre,paginate]);
 
   const activarCliente = (e) => {
     e.preventDefault();
@@ -87,13 +105,58 @@ const ConsultasComponent = () => {
       setActiveAnexos(true);
     }
   };
+  const aumentarPaginate=(e)=>{
+    e.preventDefault()
+    if(anexos[0]){
+      setPaginate(paginate+1)
+    }
+  }
+
+  const disminuirPaginate=(e)=>{
+    e.preventDefault()
+    setPaginate(paginate-1)
+  }
+
+  const crearAnexoV = async (e, idSeccionII) => {
+    e.preventDefault();
+    setMsg("Generando Anexo V");
+    setCargando(true);
+    const { error, data } = await generarAnexoV(idSeccionII);
+    if (error) {
+      //alerta
+      const msg = { error: true, msg: "Hubo un error al generar el anexo V." };
+      setMensaje(msg);
+    } else {
+      const msg = { error: false, msg: "Generado Correctamente" };
+      setMensaje(msg);
+    }
+    setAlerta(true);
+  };
+
+  const crearInforme = async (e, idSeccionII) => {
+    e.preventDefault();
+    setMsg("Generando informe");
+    setCargando(true);
+    const { error, data } = await generarInforme(idSeccionII);
+    if (error) {
+      //alerta
+      const msg = { error: true, msg: "Hubo un error al generar el informe." };
+      setMensaje(msg);
+    } else {
+      const msg = { error: false, msg: "Generado Correctamente" };
+      setMensaje(msg);
+    }
+  };
 
   console.log(anexos);
   if (editar || editarClient) return <Loader />;
   return (
     <>
       <div className=" bg-white pb-12 sm:pb-0">
+      {alerta && <Alerta alerta={menseje}></Alerta>}
         <div className="relative">
+        <Modal mensaje={msg}></Modal>
+
           <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
             <section className="sm:flex sm:items-center mb-3">
               <div className="sm:flex-auto">
@@ -173,7 +236,7 @@ const ConsultasComponent = () => {
                         leaveTo="opacity-0"
                       >
                         <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {clientes &&
+                          {clientes  &&
                             clientes.map((cliente) => (
                               <Listbox.Option
                                 key={cliente.clienteID}
@@ -229,7 +292,7 @@ const ConsultasComponent = () => {
               <></>
             )}
 
-            {activeTrimestre ? (
+            {activeTrimestre  ? (
               <Listbox value={trimestre} onChange={setTrimestre}>
                 {({ open }) => (
                   <>
@@ -360,80 +423,83 @@ const ConsultasComponent = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    <tr>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                        a
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        b
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        c
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        d
-                      </td>
-                      <td className="flex justify-between items-center">
-                        <>
-                          <Tooltip
-                            className="bg-slate-900"
-                            content="Crear anexo"
-                          >
-                            <a
-                              onClick={(e) =>
-                                crearAnexoV(e, componente.anexoID)
-                              }
-                              className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
-                            >
-                              <DocumentPlusIcon className="w-8" />
-                            </a>
-                          </Tooltip>
-                          <Tooltip
-                            className="bg-slate-900"
-                            content="Crear informe"
-                          >
-                            <a
-                              onClick={(e) =>
-                                crearInforme(e, componente.anexoID)
-                              }
-                              className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-yellow-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
-                            >
-                              <ClipboardDocumentListIcon className="w-8" />
-                            </a>
-                          </Tooltip>
-                        </>
-                      </td>
-                    </tr>
+                    {anexos && anexos.map((anexo) => (
+                         <tr>
+                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                           {anexo.idComponente}
+                         </td>
+                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                           {anexo.clienteID}
+                         </td>
+                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                           {anexo.nombreInstalacion}
+                         </td>
+                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                           {anexo.ubicacionInstalacion}
+                         </td>
+                         <td className="flex justify-between items-center">
+                           <>
+                             <Tooltip
+                               className="bg-slate-900"
+                               content="Crear anexo"
+                             >
+                               <a
+                                 onClick={(e) =>
+                                   crearAnexoV(e, anexo.anexoID)
+                                 }
+                                 className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
+                               >
+                                 <DocumentPlusIcon className="w-8" />
+                               </a>
+                             </Tooltip>
+                             <Tooltip
+                               className="bg-slate-900"
+                               content="Crear informe"
+                             >
+                               <a
+                                 onClick={(e) =>
+                                   crearInforme(e, anexo.anexoID)
+                                 }
+                                 className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-yellow-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
+                               >
+                                 <ClipboardDocumentListIcon className="w-8" />
+                               </a>
+                             </Tooltip>
+                           </>
+                         </td>
+                       </tr>
+                    ))}
+                 
                   </tbody>
                 </table>
                 <nav
-                  className="flex items-center justify-between border-t border-gray-200 bg-white py-3 "
-                  aria-label="Pagination"
-                >
-                  <div className="hidden sm:block">
-                    <p className="text-sm text-gray-700">
-                      Mostrando <span className="font-medium">1</span> a{" "}
-                      <span className="font-medium">10</span> de{" "}
-                      <span className="font-medium">20</span> resultados
-                    </p>
-                  </div>
-                  <div className="flex flex-1 justify-between sm:justify-end">
-                    <a
-                      href="#"
-                      className="flex justify-between gap-x-2 relative items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:text-white ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
-                    >
-                      <ArrowLeftIcon className="w-6" />
-                      Anterior
-                    </a>
-                    <a
-                      href="#"
-                      className="relative ml-3 flex justify-between gap-x-2 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold hover:text-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
-                    >
-                      Siguiente
-                      <ArrowRightIcon className="w-6" />
-                    </a>
-                  </div>
-                </nav>
+                className="flex items-center justify-between border-t border-gray-200 bg-white py-3 "
+                aria-label="Pagination"
+              >
+                <div className="hidden sm:block">
+                  <p className="text-sm text-gray-700">
+                    Mostrando <span className="font-medium">1</span> {" "}
+                    de{" "}
+                    <span className="font-medium">{anexos.length}</span> resultados
+                  </p>
+                </div>
+                <div className="flex flex-1 justify-between sm:justify-end">
+                  <a
+                   onClick={e=>disminuirPaginate(e)}
+                    className="flex justify-between gap-x-2 relative items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:text-white ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
+                  >
+                    <ArrowLeftIcon className="w-6"/>
+                    Anterior
+                  </a>
+                  <a
+                  onClick={e=>aumentarPaginate(e)}
+                    className="relative ml-3 flex justify-between gap-x-2 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold hover:text-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
+                  >
+                    Siguiente
+                    <ArrowRightIcon className="w-6"/>
+                  </a>
+                </div>
+              </nav>
               </>
             ) : (
               <></>

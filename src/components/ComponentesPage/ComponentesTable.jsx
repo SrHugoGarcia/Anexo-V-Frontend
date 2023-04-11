@@ -32,10 +32,11 @@ export default function ComponentesTable() {
     useState();
   const [buscarInstalacion, setBuscarInstalacion] = useState("");
   const { editarClient, setEditarClient } = useCliente();
+  const [paginate, setPaginate] = useState(1)
   console.log(editar);
   useEffect(() => {
-    const seccionII = async () => {
-      const { error, data } = await obtenerSeccionesII();
+    const seccionII = async (paginate) => {
+      const { error, data } = await obtenerSeccionesII(paginate);
       if (error) {
         //alerta
         const msg = { error: true, msg: "Hubo un error, no tienes internet" };
@@ -43,12 +44,17 @@ export default function ComponentesTable() {
         setMensaje(msg);
         setAlerta(true);
       } else {
-        setSeccionesII(data.data);
-        setSeccionesII2(data.data);
+        setSeccionesII(data.data.data);
+        setSeccionesII2(data.data.data);
       }
     };
-    seccionII();
-  }, []);
+    if(paginate==0){
+      setPaginate(1)
+    }else{
+      console.log(paginate)
+      seccionII(paginate);
+    }
+  }, [paginate]);
   useEffect(() => {
     if (editar || editarClient) {
       setEditar(false);
@@ -141,6 +147,18 @@ export default function ComponentesTable() {
     setEditar(true);
     setComponente(componente);
   };
+  const aumentarPaginate=(e)=>{
+    e.preventDefault()
+    if(seccionesII[0]){
+      setPaginate(paginate+1)
+    }
+  }
+
+  const disminuirPaginate=(e)=>{
+    e.preventDefault()
+    setPaginate(paginate-1)
+  }
+
   if (editarClient) return <Loader />;
   console.log(menseje);
   return (
@@ -323,27 +341,27 @@ export default function ComponentesTable() {
                       ))}
                   </tbody>
                 </table>
-                <nav
+                  <nav
                 className="flex items-center justify-between border-t border-gray-200 bg-white py-3 "
                 aria-label="Pagination"
               >
                 <div className="hidden sm:block">
                   <p className="text-sm text-gray-700">
-                    Mostrando <span className="font-medium">1</span> a{" "}
-                    <span className="font-medium">10</span> de{" "}
-                    <span className="font-medium">20</span> resultados
+                    Mostrando <span className="font-medium">1</span> {" "}
+                    de{" "}
+                    <span className="font-medium">{seccionesII.length}</span> resultados
                   </p>
                 </div>
                 <div className="flex flex-1 justify-between sm:justify-end">
                   <a
-                    href="#"
+                   onClick={e=>disminuirPaginate(e)}
                     className="flex justify-between gap-x-2 relative items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:text-white ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
                   >
                     <ArrowLeftIcon className="w-6"/>
                     Anterior
                   </a>
                   <a
-                    href="#"
+                  onClick={e=>aumentarPaginate(e)}
                     className="relative ml-3 flex justify-between gap-x-2 items-center rounded-md bg-white px-3 py-2 text-sm font-semibold hover:text-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-[#009640] focus-visible:outline-offset-0"
                   >
                     Siguiente

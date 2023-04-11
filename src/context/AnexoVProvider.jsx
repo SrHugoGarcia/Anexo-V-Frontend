@@ -19,6 +19,7 @@ const AnexoVProvider = ({children}) =>{
               withCredentials: true,
               data:{idSeccionII}
             });
+            console.log(respuesta)
             if(respuesta.data.status === 'successful'){
                 setCargando(false)
             return {
@@ -35,16 +36,14 @@ const AnexoVProvider = ({children}) =>{
           }
     }
 
-    const obtenerAnexos =async(clienteID,trimestre)=>{
+    const obtenerAnexos =async(clienteID,trimestre,paginate)=>{
         try {
+          console.log(clienteID+ " " + trimestre+ paginate)
             const respuesta = await servidorAxios({
-              method: "POST",
-              url: `/cliente/trimestre`,
+              method: "GET",
+              url: `/seccionII?trimestre=${trimestre}&clienteID=${clienteID}&page=${paginate}`,
               withCredentials: true,
-              data:{
-                clienteID,
-                trimestre
-              }
+              
             });
             if(respuesta.status == 200){
                 console.log(respuesta)

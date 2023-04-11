@@ -12,11 +12,11 @@ const SeccionIIProvider = ({children}) =>{
     const [cargando, setCargando] = useState(true);
     const [editar,setEditar] = useState(false)
 
-    const obtenerSeccionesII =async()=>{
+    const obtenerSeccionesII =async(paginate)=>{
         try {
             const respuesta = await servidorAxios({
               method: "GET",
-              url: `/seccionII`,
+              url: `/seccionII?page=${paginate}&limit=${8}`,
               withCredentials: true,
             });
             console.log(respuesta)
