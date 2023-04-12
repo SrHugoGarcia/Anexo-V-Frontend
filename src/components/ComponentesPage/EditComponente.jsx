@@ -731,8 +731,8 @@ export default function EditComponente({ componente }) {
                       <div className="mt-2">
                         <input
                           type="text"
-                          onChange={(e) => horaReparacion(e.target.value)}
-                          value={setHoraReparacion}
+                          onChange={(e) => setHoraReparacion(e.target.value)}
+                          value={horaReparacion}
                           name="horaReparacion"
                           id="horaReparacion"
                           autoComplete="given-name"
