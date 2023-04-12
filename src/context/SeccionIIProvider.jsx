@@ -41,6 +41,9 @@ const SeccionIIProvider = ({children}) =>{
           const respuesta = await servidorAxios({
             method: "PATCH",
             url: `/seccionII/${data._id}`,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
             withCredentials: true,
             data
           });
@@ -54,7 +57,7 @@ const SeccionIIProvider = ({children}) =>{
           }
         } catch (err) {
             return{
-              msg: err.response.data.message,
+              msg: "Hubo un error con la imagen(No acepta otro formato que no sea imagen) o los datos",
               error: true,
             };
         }

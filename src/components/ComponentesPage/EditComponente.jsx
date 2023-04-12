@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useSeccionII from "../../hooks/useSeccionII";
 import { useNavigate } from "react-router-dom";
+import Alerta from "../Alerta";
 
 export default function EditComponente({ componente }) {
   const [nombreInstalacion, setNombreInstalacion] = useState(
@@ -72,7 +73,11 @@ export default function EditComponente({ componente }) {
   const [observacionPersonal, setObservacionPersonal] = useState(
     componente.observacionPersonal
   );
+  const [imgCamara, setImgCamara] = useState(componente.observacion);
   const { updateSeccionII } = useSeccionII();
+  const [alerta, setAlerta] = useState();
+  const [menseje, setMensaje] = useState({});
+  const [msg, setMsg] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -195,10 +200,13 @@ export default function EditComponente({ componente }) {
       observacion,
       observacionPersonal,
       anexoID: componente.anexoID,
+      imgCamara: imgCamara[0]
     };
-    const { data, error } = await updateSeccionII(datos);
+    const { data, error,msg } = await updateSeccionII(datos);
 
     if (error) {
+      setMensaje({error,msg});
+      setAlerta(true);
       // Manejar el error
     } else {
       console.log("Hola");
@@ -207,9 +215,10 @@ export default function EditComponente({ componente }) {
     }
   };
   //fuga, observacion, observacionPersonal trimestre
-  console.log(componente.fechaInicioInspeccion);
+  console.log(imgCamara);
   return (
     <div className="space-y-10 divide-y divide-gray-900/10">
+              {alerta && <Alerta alerta={menseje}></Alerta>}
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-3">
         <div className="px-4 sm:px-0">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -220,7 +229,7 @@ export default function EditComponente({ componente }) {
           </p>
         </div>
       </div>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={(e) => handleSubmit(e)} encType="multipart/form-data">
         <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
           <div className="px-4 sm:px-0">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -651,13 +660,10 @@ export default function EditComponente({ componente }) {
                     />
                   </div>
                 </div>
-
               </div>
             </div>
-          
           </div>
         </div>
-
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
           <div className="px-4 sm:px-0">
@@ -665,16 +671,13 @@ export default function EditComponente({ componente }) {
               Sección II
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-            ¿Pudo ser reparado?
+              ¿Pudo ser reparado?
             </p>
           </div>
 
           <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
             <div className="px-4 py-6 sm:p-8">
               <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              
-              
-
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="reparado"
@@ -696,116 +699,113 @@ export default function EditComponente({ componente }) {
                     </select>
                   </div>
                 </div>
-                {(reparado == "Si")?<>
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="fechaReparacion"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Fecha de la reparación
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      onChange={(e) => setFechaReparacion(e.target.value)}
-                      value={fechaReparacion}
-                      name="fechaReparacion"
-                      id="fechaReparacion"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                {reparado == "Si" ? (
+                  <>
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="fechaReparacion"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Fecha de la reparación
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="date"
+                          onChange={(e) => setFechaReparacion(e.target.value)}
+                          value={fechaReparacion}
+                          name="fechaReparacion"
+                          id="fechaReparacion"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="horaReparacion"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Hora de la reparación
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      onChange={(e) => horaReparacion(e.target.value)}
-                      value={setHoraReparacion}
-                      name="horaReparacion"
-                      id="horaReparacion"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="horaReparacion"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Hora de la reparación
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          onChange={(e) => horaReparacion(e.target.value)}
+                          value={setHoraReparacion}
+                          name="horaReparacion"
+                          id="horaReparacion"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="fechaComprobacionReparacion"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Fecha de comprobación de la reparación
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      onChange={(e) =>
-                        setFechaComprobacionReparacion(e.target.value)
-                      }
-                      value={fechaComprobacionReparacion}
-                      name="fechaComprobacionReparacion"
-                      id="fechaComprobacionReparacion"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="fechaComprobacionReparacion"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Fecha de comprobación de la reparación
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="date"
+                          onChange={(e) =>
+                            setFechaComprobacionReparacion(e.target.value)
+                          }
+                          value={fechaComprobacionReparacion}
+                          name="fechaComprobacionReparacion"
+                          id="fechaComprobacionReparacion"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-               
-
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="horaComprobacionReparacion"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Hora de comprobación de la reparación
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      value={horaComprobacionReparacion}
-                      onChange={(e) =>
-                        setHoraComprobacionReparacion(e.target.value)
-                      }
-                      name="horaComprobacionReparacion"
-                      id="horaComprobacionReparacion"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-                </>:<></>}
-                
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="horaComprobacionReparacion"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Hora de comprobación de la reparación
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          value={horaComprobacionReparacion}
+                          onChange={(e) =>
+                            setHoraComprobacionReparacion(e.target.value)
+                          }
+                          name="horaComprobacionReparacion"
+                          id="horaComprobacionReparacion"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
-          
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
           <div className="px-4 sm:px-0">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
               Sección II
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-            ¿No pudo ser reparado por falta de componentes?
-
+              ¿No pudo ser reparado por falta de componentes?
             </p>
           </div>
 
           <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
             <div className="px-4 py-6 sm:p-8">
               <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-       
-
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="noReparadofaltaComponentes"
@@ -834,76 +834,79 @@ export default function EditComponente({ componente }) {
                     </select>
                   </div>
                 </div>
-                      {noReparadofaltaComponentes == "Si"?<>
-                        <div className="sm:col-span-3">
-                  <label
-                    htmlFor="fechaRemisionComponente"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Fecha de remisión o compra del componente
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      value={fechaRemisionComponente}
-                      onChange={(e) =>
-                        setFechaRemisionComponente(e.target.value)
-                      }
-                      name="fechaRemisionComponente"
-                      id="fechaRemisionComponente"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                {noReparadofaltaComponentes == "Si" ? (
+                  <>
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="fechaRemisionComponente"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Fecha de remisión o compra del componente
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="date"
+                          value={fechaRemisionComponente}
+                          onChange={(e) =>
+                            setFechaRemisionComponente(e.target.value)
+                          }
+                          name="fechaRemisionComponente"
+                          id="fechaRemisionComponente"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="fechaReperacionComponente"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Fecha de reparación o compra del componente adquirido
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      value={fechaReperacionComponente}
-                      onChange={(e) =>
-                        setFechaReperacionComponente(e.target.value)
-                      }
-                      name="fechaReperacionComponente"
-                      id="fechaReperacionComponente"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="fechaReperacionComponente"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Fecha de reparación o compra del componente adquirido
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="date"
+                          value={fechaReperacionComponente}
+                          onChange={(e) =>
+                            setFechaReperacionComponente(e.target.value)
+                          }
+                          name="fechaReperacionComponente"
+                          id="fechaReperacionComponente"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="fechaRemplazoEquipo"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Fecha de reemplazo del equipo sino pudo ser reparado
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      value={fechaRemplazoEquipo}
-                      onChange={(e) => setFechaRemplazoEquipo(e.target.value)}
-                      name="fechaRemplazoEquipo"
-                      id="fechaRemplazoEquipo"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-                      </>:<></>}
-               
-
+                    <div className="sm:col-span-3">
+                      <label
+                        htmlFor="fechaRemplazoEquipo"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Fecha de reemplazo del equipo sino pudo ser reparado
+                      </label>
+                      <div className="mt-2">
+                        <input
+                          type="date"
+                          value={fechaRemplazoEquipo}
+                          onChange={(e) =>
+                            setFechaRemplazoEquipo(e.target.value)
+                          }
+                          name="fechaRemplazoEquipo"
+                          id="fechaRemplazoEquipo"
+                          autoComplete="given-name"
+                          className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
-       
           </div>
         </div>
 
@@ -913,14 +916,14 @@ export default function EditComponente({ componente }) {
               Sección II
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-            Detalle de las acciones del programa de Detección y Reparacion de Fugas.
+              Detalle de las acciones del programa de Detección y Reparacion de
+              Fugas.
             </p>
           </div>
 
           <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
             <div className="px-4 py-6 sm:p-8">
               <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-       
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="volumenMetano"
@@ -1003,6 +1006,29 @@ export default function EditComponente({ componente }) {
                       <option>No</option>
                     </select>
                   </div>
+                </div>
+
+                <div className="sm:col-span-3">
+                  <label
+                    for="multiple_files"                    
+                    className="block text-sm font-medium leading-6 text-gray-900 "
+                  >
+                    Subir imagen de la camara {componente.imgCamara ? "Imagen Actual":""}
+                  </label>
+                  <a
+                    className="block text-sm font-medium leading-6 text-green-800 "
+                    href={componente.imgCamara}
+                  >
+                    {componente.imgCamara ? "Ver Imagen Actual":""}
+                  </a>
+                  <input
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer
+                     bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600
+                      dark:placeholder-gray-400"
+                    id="multiple_files"
+                    onChange={e=>setImgCamara(e.target.files)}
+                    type="file"
+                  />
                 </div>
               </div>
             </div>
