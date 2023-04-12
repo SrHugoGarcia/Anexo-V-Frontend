@@ -152,6 +152,7 @@ export default function EditComponente({ componente }) {
     e.preventDefault();
     console.log("ola");
     const datos = {
+      _id: componente._id,
       nombreInstalacion,
       idComponente,
       ubicacionInstalacion,
@@ -631,6 +632,51 @@ export default function EditComponente({ componente }) {
 
                 <div className="sm:col-span-3">
                   <label
+                    htmlFor="concentracionPosteriorReparacion"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Concentración posterior a la reparación
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      value={concentracionPosteriorReparacion}
+                      onChange={(e) =>
+                        setConcentracionPosteriorReparacion(e.target.value)
+                      }
+                      name="concentracionPosteriorReparacion"
+                      id="concentracionPosteriorReparacion"
+                      autoComplete="given-name"
+                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          
+          </div>
+        </div>
+
+
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+          <div className="px-4 sm:px-0">
+            <h2 className="text-base font-semibold leading-7 text-gray-900">
+              Sección II
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+            ¿Pudo ser reparado?
+            </p>
+          </div>
+
+          <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+            <div className="px-4 py-6 sm:p-8">
+              <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              
+              
+
+                <div className="sm:col-span-3">
+                  <label
                     htmlFor="reparado"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
@@ -650,7 +696,7 @@ export default function EditComponente({ componente }) {
                     </select>
                   </div>
                 </div>
-
+                {(reparado == "Si")?<>
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="fechaReparacion"
@@ -713,27 +759,7 @@ export default function EditComponente({ componente }) {
                   </div>
                 </div>
 
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="fechaConclusionInspeccion"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Fecha de conclusión de la inspección técnica
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="date"
-                      value={fechaConclusionInspeccion}
-                      onChange={(e) =>
-                        setFechaConclusionInspeccion(e.target.value)
-                      }
-                      name="fechaConclusionInspeccion"
-                      id="fechaConclusionInspeccion"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+               
 
                 <div className="sm:col-span-3">
                   <label
@@ -756,28 +782,29 @@ export default function EditComponente({ componente }) {
                     />
                   </div>
                 </div>
+                </>:<></>}
+                
+              </div>
+            </div>
+          
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+          <div className="px-4 sm:px-0">
+            <h2 className="text-base font-semibold leading-7 text-gray-900">
+              Sección II
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+            ¿No pudo ser reparado por falta de componentes?
 
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="concentracionPosteriorReparacion"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Concentración posterior a la reparación
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      value={concentracionPosteriorReparacion}
-                      onChange={(e) =>
-                        setConcentracionPosteriorReparacion(e.target.value)
-                      }
-                      name="concentracionPosteriorReparacion"
-                      id="concentracionPosteriorReparacion"
-                      autoComplete="given-name"
-                      className="block w-full rounded-md pl-3 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
+            </p>
+          </div>
+
+          <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+            <div className="px-4 py-6 sm:p-8">
+              <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+       
 
                 <div className="sm:col-span-3">
                   <label
@@ -807,8 +834,8 @@ export default function EditComponente({ componente }) {
                     </select>
                   </div>
                 </div>
-
-                <div className="sm:col-span-3">
+                      {noReparadofaltaComponentes == "Si"?<>
+                        <div className="sm:col-span-3">
                   <label
                     htmlFor="fechaRemisionComponente"
                     className="block text-sm font-medium leading-6 text-gray-900"
@@ -871,7 +898,29 @@ export default function EditComponente({ componente }) {
                     />
                   </div>
                 </div>
+                      </>:<></>}
+               
 
+              </div>
+            </div>
+       
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+          <div className="px-4 sm:px-0">
+            <h2 className="text-base font-semibold leading-7 text-gray-900">
+              Sección II
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+            Detalle de las acciones del programa de Detección y Reparacion de Fugas.
+            </p>
+          </div>
+
+          <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+            <div className="px-4 py-6 sm:p-8">
+              <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+       
                 <div className="sm:col-span-3">
                   <label
                     htmlFor="volumenMetano"

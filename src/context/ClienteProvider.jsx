@@ -50,13 +50,13 @@ const ClienteProvider = ({children}) =>{
       try {
           const respuesta = await servidorAxios({
             method: "PATCH",
-            url: `/cliente`,
+            url: `/cliente/${data._id}`,
             withCredentials: true,
             data
           });
           console.log(respuesta)
 
-          if(respuesta.data.status === 'successful'){
+          if(respuesta.data.status == "successful"){
           return {
               error:false,
               data:respuesta.data

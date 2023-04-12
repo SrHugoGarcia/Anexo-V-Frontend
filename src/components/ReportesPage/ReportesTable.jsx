@@ -250,7 +250,7 @@ export default function ReportesTable() {
                                 content="Descargar informe"
                               >
                                 <a
-                                  href={componente.url}
+                                  href={componente.informeURL}
                                   className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
                                 >
                                   <DocumentArrowDownIcon className="w-8" />

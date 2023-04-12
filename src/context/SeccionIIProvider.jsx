@@ -40,7 +40,7 @@ const SeccionIIProvider = ({children}) =>{
       try {
           const respuesta = await servidorAxios({
             method: "PATCH",
-            url: `/seccionII`,
+            url: `/seccionII/${data._id}`,
             withCredentials: true,
             data
           });

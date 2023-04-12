@@ -14,6 +14,7 @@ const EditCliente = ({ cliente }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const datos = {
+      _id: cliente._id,
       cliente: nombreCliente,
       ciudad,
       clienteID: cliente.clienteID,

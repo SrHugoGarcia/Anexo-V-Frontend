@@ -247,13 +247,13 @@ export default function AnexoVtable() {
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 flex justify-between text-center">
                           <>
-                            {componente.url ? (
+                            {componente.anexoURL ? (
                               <Tooltip
                                 className="bg-slate-900"
                                 content="Descargar anexo"
                               >
                                 <a
-                                  href={componente.url}
+                                  href={componente.anexoURL}
                                   className="text-white text-base font-semibold hover:text-slate-900 text-md border bg-green-600  px-1 mx-auto mt-1 rounded-md py-1 cursor-pointer"
                                 >
                                   <DocumentArrowDownIcon className="w-8" />
